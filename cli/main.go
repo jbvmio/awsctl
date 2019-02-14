@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"local/jbvmio/awsctl"
 )
 
 func main() {
 	client, _ := awsctl.NewClient("us-east-2")
-	client.GetInstances()
+	instances := client.GetInstances()
+	fmt.Printf("%+v", instances)
 }
