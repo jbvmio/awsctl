@@ -8,11 +8,29 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-// Instances hold a mapping of ec2 instances by instance id.
-type Instances map[string]*ec2.Instance
+// InstanceMap hold a mapping of ec2 instances by instance id.
+type InstanceMap map[string]*ec2.Instance
 
-// GetInstances retrieves instances based on the entered id string. All instances returned if no id entered.
-func (cl *Client) GetInstances(ids ...string) *Instances {
+func (i InstanceMap) ListIDs() []string {
+	var ids []string
+	for k := range i {
+		ids = append(ids, k)
+	}
+	return ids
+}
+
+func (i InstanceMap) ListSG() []string {
+	var ids []string
+	for k := range i {
+		for _, sg := range i[k].SecurityGroups {
+			ids = append(ids, *sg.GroupId)
+		}
+	}
+	return ids
+}
+
+// GetInstances returns an InstanceMap based on the entered id string. All instances returned if no id entered.
+func (cl *Client) GetInstances(ids ...string) InstanceMap {
 	var input *ec2.DescribeInstancesInput
 	switch {
 	case len(ids) > 0:
@@ -39,14 +57,13 @@ func (cl *Client) GetInstances(ids ...string) *Instances {
 	if aerr, ok := err.(awserr.Error); ok {
 		fmt.Println("Error:", aerr.Message())
 	}
-	var instances Instances = make(map[string]*ec2.Instance)
+	var instanceMap InstanceMap = make(map[string]*ec2.Instance)
 	if err == nil {
 		for _, res := range Insts.Reservations {
 			for _, inst := range res.Instances {
-				instances[*inst.InstanceId] = inst
+				instanceMap[*inst.InstanceId] = inst
 			}
 		}
-		//fmt.Printf("%s", instances.Reservations)
 	}
-	return &instances
+	return instanceMap
 }
