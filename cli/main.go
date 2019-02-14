@@ -7,6 +7,7 @@ import (
 
 func main() {
 	client, _ := awsctl.NewClient("us-east-2")
-	instMap := client.GetInstances()
-	fmt.Printf("%+v", instMap.ListSG())
+	//instMap := client.GetEC2Instances()
+	instances := client.GetInstances()
+	fmt.Printf("%+v", instances)
 }
