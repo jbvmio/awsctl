@@ -58,8 +58,8 @@ func (cl *Client) GetInstanceMap(ids ...string) InstanceMap {
 	if aerr, ok := err.(awserr.Error); ok {
 		fmt.Println("Error:", aerr.Message())
 	}
-	instanceMap = make(map[string]*ec2.Instance)
 	if err == nil {
+		instanceMap = make(map[string]*ec2.Instance)
 		for _, res := range Insts.Reservations {
 			for _, inst := range res.Instances {
 				instanceMap[*inst.InstanceId] = inst

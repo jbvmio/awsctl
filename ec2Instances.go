@@ -15,8 +15,8 @@ type Instance struct {
 	VPC         string
 }
 
-func (cl *Client) GetInstances() []Instance {
-	return cl.GetInstanceMap().GetInstances()
+func (cl *Client) GetInstances(ids ...string) []Instance {
+	return cl.GetInstanceMap().GetInstances(ids...)
 }
 
 func (i InstanceMap) GetInstances(ids ...string) []Instance {
@@ -24,20 +24,22 @@ func (i InstanceMap) GetInstances(ids ...string) []Instance {
 	switch {
 	case len(ids) > 0:
 		for _, id := range ids {
-			inst := Instance{
-				AZ:          *i[id].Placement.AvailabilityZone,
-				ID:          *i[id].InstanceId,
-				Image:       *i[id].ImageId,
-				KeyPair:     *i[id].KeyName,
-				PrivateName: *i[id].PrivateDnsName,
-				PrivateIP:   *i[id].PrivateIpAddress,
-				PublicName:  *i[id].PublicDnsName,
-				PublicIP:    *i[id].PublicDnsName,
-				State:       *i[id].State.Name,
-				Type:        *i[id].InstanceType,
-				VPC:         *i[id].VpcId,
+			if i[id] != nil {
+				inst := Instance{
+					AZ:          *i[id].Placement.AvailabilityZone,
+					ID:          *i[id].InstanceId,
+					Image:       *i[id].ImageId,
+					KeyPair:     *i[id].KeyName,
+					PrivateName: *i[id].PrivateDnsName,
+					PrivateIP:   *i[id].PrivateIpAddress,
+					PublicName:  *i[id].PublicDnsName,
+					PublicIP:    *i[id].PublicIpAddress,
+					State:       *i[id].State.Name,
+					Type:        *i[id].InstanceType,
+					VPC:         *i[id].VpcId,
+				}
+				instances = append(instances, inst)
 			}
-			instances = append(instances, inst)
 		}
 	default:
 		for id := range i {
