@@ -12,10 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package x
 
-import "github.com/jbvmio/awsctl/cli/cmd"
+import (
+	"os"
+)
 
-func main() {
-	cmd.Execute()
+// HomeDir return the string value of the current users ~ or home directory.
+func HomeDir() string {
+	if h := os.Getenv("HOME"); h != "" {
+		return h
+	}
+	return os.Getenv("USERPROFILE") // windows
+}
+
+// FileExists checks for the existence of the file indicated by filename and returns true if it exists.
+func FileExists(filename string) bool {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+// StdinAvailable here
+func StdinAvailable() bool {
+	stat, _ := os.Stdin.Stat()
+	return (stat.Mode() & os.ModeCharDevice) == 0
 }
