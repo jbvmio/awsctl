@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jbvmio/awsctl/cli/awsgo"
+	"github.com/jbvmio/awsctl/cli/cmd/config"
 	"github.com/jbvmio/awsctl/cli/cmd/ec2"
 	"github.com/jbvmio/awsctl/cli/cmd/get"
 	"github.com/jbvmio/awsctl/cli/x/out"
@@ -37,6 +39,9 @@ var outFlags out.OutFlags
 var rootCmd = &cobra.Command{
 	Use:   "awsctl",
 	Short: "awsctl: AWS Management Tool",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		awsgo.LaunchAWSClient(config.GetContext())
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		switch true {
 		case outFlags.Format != "":
@@ -57,8 +62,9 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.Flags().StringVarP(&outFlags.Format, "out", "o", "", "Change Output Format - yaml|json.")
+	rootCmd.Flags().StringVarP(&outFlags.Format, "out", "o", "", "Change Output Format - wide|long|yaml|json.")
 
+	rootCmd.AddCommand(config.CmdConfig)
 	rootCmd.AddCommand(get.CmdGet)
 	rootCmd.AddCommand(ec2.CmdRestartEc2)
 }
@@ -73,7 +79,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".2kafkactl")
+		viper.SetConfigName(".awsctl")
 	}
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {

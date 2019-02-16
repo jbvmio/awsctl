@@ -2,6 +2,7 @@ package awsctl
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
@@ -14,6 +15,7 @@ type Client struct {
 	session    *session.Session
 	dryrunMode bool
 	svc        *SVC
+	awsContext *AWSContext
 }
 
 // SVC contains available AWS service clients
@@ -22,19 +24,35 @@ type SVC struct {
 }
 
 // NewClient creates a new Client
-func NewClient(region string) (*Client, error) {
+func NewClient(awsContext *AWSContext) (*Client, error) {
 	var client Client
+	creds, err := awsContext.Retrieve()
+	if err != nil {
+		return &client, err
+	}
 	awsConfig := aws.Config{
-		Region: aws.String(region),
+		Credentials: credentials.NewStaticCredentialsFromCreds(creds),
 	}
 	sess, err := session.NewSession(&awsConfig)
 	if err != nil {
 		return &client, err
 	}
-	client.config = &awsConfig
-	client.session = sess.Copy()
+	client.awsContext = awsContext
+	client.session = sess //sess.Copy()
 	client.svc = &SVC{}
 	return &client, nil
+}
+
+// AWSContext returns the client's AWSContext.
+func (cl *Client) AWSContext() *AWSContext {
+	return cl.awsContext
+}
+
+// AddConfig changes the underlying session with new Config options.
+func (cl *Client) AddConfig(options ConfigOptions) {
+	cl.session = cl.session.Copy(&aws.Config{
+		Region: options.ConfigRegion(),
+	})
 }
 
 // DryRunMode sets the DryRun bool

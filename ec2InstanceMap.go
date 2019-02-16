@@ -56,7 +56,7 @@ func (cl *Client) GetInstanceMap(ids ...string) InstanceMap {
 	}
 	Insts, err := cl.EC2().DescribeInstances(input)
 	if aerr, ok := err.(awserr.Error); ok {
-		fmt.Println("Error:", aerr.Message())
+		fmt.Printf("Error: %v\n%v\n", aerr.Message(), err)
 	}
 	if err == nil {
 		instanceMap = make(map[string]*ec2.Instance)

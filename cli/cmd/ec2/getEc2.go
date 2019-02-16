@@ -2,10 +2,12 @@ package ec2
 
 import (
 	"github.com/jbvmio/awsctl"
-	"github.com/jbvmio/awsctl/cli/aws"
+	"github.com/jbvmio/awsctl/cli/awsgo"
 	"github.com/jbvmio/awsctl/cli/x/out"
 	"github.com/spf13/cobra"
 )
+
+var ec2Flags awsgo.EC2Flags
 
 var CmdGetEc2 = &cobra.Command{
 	Use:     "ec2",
@@ -15,7 +17,7 @@ var CmdGetEc2 = &cobra.Command{
 		var instances []awsctl.Instance
 		switch {
 		default:
-			instances = aws.GetEC2Instances(args...)
+			instances = awsgo.GetEC2Instances(ec2Flags, args...)
 		}
 		switch {
 		case cmd.Flags().Changed("out"):
@@ -31,5 +33,6 @@ var CmdGetEc2 = &cobra.Command{
 }
 
 func init() {
+	CmdGetEc2.Flags().StringVar(&ec2Flags.Region, "region", "", "Desired Region.")
 	//CmdGetEc2.PersistentFlags().StringVarP(&outFlags.Format, "out", "o", "", "Change Output Format - wide|long|yaml|json.")
 }
