@@ -17,8 +17,13 @@ var (
 	clientContext *awsctl.AWSContext
 )
 
+// GlobalFlags holds Global options.
+type GlobalFlags struct {
+	DryRun bool
+}
+
 // LaunchAWSClient launches the AWS Client
-func LaunchAWSClient(context *awsctl.AWSContext) {
+func LaunchAWSClient(context *awsctl.AWSContext, flags GlobalFlags) {
 	client, errd = awsctl.NewClient(context)
 	if errd != nil {
 		out.Failf("Error Launching AWS Client: %v", errd)

@@ -11,6 +11,7 @@ var CmdRestartEc2 = &cobra.Command{
 	Use:     "restart",
 	Aliases: []string{"stop", "start"},
 	Short:   "Restart an EC2 Instance",
+	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		switch {
 		case strings.Contains(cmd.CalledAs(), "restart"):

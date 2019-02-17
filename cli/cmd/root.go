@@ -33,6 +33,7 @@ var (
 	cfgFile string
 )
 
+var globalFlags awsgo.GlobalFlags
 var outFlags out.OutFlags
 
 // rootCmd represents the base command when called without any subcommands
@@ -40,7 +41,7 @@ var rootCmd = &cobra.Command{
 	Use:   "awsctl",
 	Short: "awsctl: AWS Management Tool",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		awsgo.LaunchAWSClient(config.GetContext())
+		awsgo.LaunchAWSClient(config.GetContext(), globalFlags)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		switch true {
@@ -63,6 +64,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.Flags().StringVarP(&outFlags.Format, "out", "o", "", "Change Output Format - wide|long|yaml|json.")
+	rootCmd.PersistentFlags().BoolVar(&globalFlags.DryRun, "dry-run", false, "Enable Dry Run Mode.")
 
 	rootCmd.AddCommand(config.CmdConfig)
 	rootCmd.AddCommand(get.CmdGet)
