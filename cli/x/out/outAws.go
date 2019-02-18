@@ -38,6 +38,11 @@ func printAws(i interface{}) {
 		for _, v := range i {
 			tbl.AddRow(v.Index, v.ID, v.State, v.PublicIP, v.PublicDnsName)
 		}
+	case []awsctl.InstanceStateChange:
+		tbl = table.New("ID", "PREVIOUS", "CURRENT")
+		for _, v := range i {
+			tbl.AddRow(v.ID, v.PreviousState, v.CurrentState)
+		}
 	}
 	tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt)
 	tbl.Print()

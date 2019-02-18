@@ -18,35 +18,28 @@ func GetEC2Instances(flags EC2Flags, ids ...string) []awsctl.Instance {
 	return instances
 }
 
-// StartEC2Instances starts AWS Instances by id.
-func StartEC2Instances(flags EC2Flags, ids ...string) []awsctl.Instance {
-	/*
-		defaultFlags := EC2Flags{}.GetDefaults(client.AWSContext().DefaultConfigDir, flags)
-		if defaultFlags != nil {
-			client.AddConfig(defaultFlags)
-		}
-		instances := client.GetInstances(ids...)
-		if len(instances) < 1 {
-			out.Failf("No Results Found.")
-		}
-	*/
-	instances := GetEC2Instances(flags, ids...)
-	var insts []*string
-	for _, inst := range instances {
-		insts = append(insts, &inst.ID)
-	}
-	return instances
-}
-
-// StopEC2Instances stops AWS Instances by id.
-func StopEC2Instances(flags EC2Flags, ids ...string) []awsctl.Instance {
+// StartEC2Instances stops AWS Instances by id.
+func StartEC2Instances(flags EC2Flags, ids ...string) []awsctl.InstanceStateChange {
 	defaultFlags := EC2Flags{}.GetDefaults(client.AWSContext().DefaultConfigDir, flags)
 	if defaultFlags != nil {
 		client.AddConfig(defaultFlags)
 	}
-	instances := client.GetInstances(ids...)
-	if len(instances) < 1 {
+	output := client.StartEC2Instances(ids...)
+	if len(output) < 1 {
 		out.Failf("No Results Found.")
 	}
-	return instances
+	return output
+}
+
+// StopEC2Instances stops AWS Instances by id.
+func StopEC2Instances(flags EC2Flags, ids ...string) []awsctl.InstanceStateChange {
+	defaultFlags := EC2Flags{}.GetDefaults(client.AWSContext().DefaultConfigDir, flags)
+	if defaultFlags != nil {
+		client.AddConfig(defaultFlags)
+	}
+	output := client.StopEC2Instances(ids...)
+	if len(output) < 1 {
+		out.Failf("No Results Found.")
+	}
+	return output
 }
