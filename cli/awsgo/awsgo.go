@@ -28,5 +28,6 @@ func LaunchAWSClient(context *awsctl.AWSContext, flags GlobalFlags) {
 	if errd != nil {
 		out.Failf("Error Launching AWS Client: %v", errd)
 	}
+	client.DryRunMode(flags.DryRun)
 	clientContext = context
 }

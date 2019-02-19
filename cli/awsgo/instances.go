@@ -43,3 +43,14 @@ func StopEC2Instances(flags EC2Flags, ids ...string) []awsctl.InstanceStateChang
 	}
 	return output
 }
+
+// RebootEC2Instances reboots AWS Instances by id.
+func RebootEC2Instances(flags EC2Flags, ids ...string) { //[]awsctl.InstanceStateChange {
+	defaultFlags := EC2Flags{}.GetDefaults(client.AWSContext().DefaultConfigDir, flags)
+	if defaultFlags != nil {
+		client.AddConfig(defaultFlags)
+	}
+	if ok := client.RebootEC2Instances(ids...); ok {
+		out.Infof("Reboot Successfully Sent.")
+	}
+}

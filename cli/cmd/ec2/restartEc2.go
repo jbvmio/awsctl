@@ -1,7 +1,6 @@
 package ec2
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/jbvmio/awsctl"
@@ -12,19 +11,18 @@ import (
 
 var CmdRestartEc2 = &cobra.Command{
 	Use:     "restart",
-	Aliases: []string{"stop", "start"},
+	Aliases: []string{"stop", "start", "reboot"},
 	Short:   "Restart an EC2 Instance",
 	Args:    cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var isc []awsctl.InstanceStateChange
 		switch {
-		case strings.Contains(cmd.CalledAs(), "restart"):
-			fmt.Println("restart Called")
+		case strings.Contains(cmd.CalledAs(), "reboot"):
+			awsgo.RebootEC2Instances(ec2Flags, args...)
+			return
 		case strings.Contains(cmd.CalledAs(), "start"):
-			fmt.Println("start Called")
 			isc = awsgo.StartEC2Instances(ec2Flags, args...)
 		case strings.Contains(cmd.CalledAs(), "stop"):
-			fmt.Println("stop Called")
 			isc = awsgo.StopEC2Instances(ec2Flags, args...)
 		}
 		switch {

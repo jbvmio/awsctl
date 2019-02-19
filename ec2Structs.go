@@ -26,7 +26,6 @@ type Instance struct {
 func (i *Instance) convertFrom(awsI *ec2.Instance) {
 	var name string
 	var tags map[string]string
-
 	switch true {
 	case awsI.Tags != nil:
 		tags = make(map[string]string, len(awsI.Tags))
