@@ -26,14 +26,22 @@ type Instance struct {
 func (i *Instance) convertFrom(awsI *ec2.Instance) {
 	var name string
 	var tags map[string]string
-	if awsI.Tags != nil {
+
+	switch true {
+	case awsI.Tags != nil:
 		tags = make(map[string]string, len(awsI.Tags))
 		for _, tag := range awsI.Tags {
 			tags[*tag.Key] = *tag.Value
 		}
 		name = tags["Name"]
+		i.Tags = tags
+		i.TagCount = len(tags)
+		fallthrough
+	case awsI.PublicIpAddress != nil:
+		if awsI.PublicIpAddress != nil {
+			i.PublicIP = *awsI.PublicIpAddress
+		}
 	}
-
 	i.AZ = *awsI.Placement.AvailabilityZone
 	i.ID = *awsI.InstanceId
 	i.Image = *awsI.ImageId
@@ -43,13 +51,10 @@ func (i *Instance) convertFrom(awsI *ec2.Instance) {
 	i.PrivateDnsName = *awsI.PrivateDnsName
 	i.PrivateIP = *awsI.PrivateIpAddress
 	i.PublicDnsName = *awsI.PublicDnsName
-	i.PublicIP = *awsI.PublicIpAddress
 	i.State = *awsI.State.Name
 	i.Type = *awsI.InstanceType
 	i.VPC = *awsI.VpcId
 	i.Tags = tags
-	i.TagCount = len(tags)
-
 }
 
 // InstanceStateChange holds state changes for an ec2 instance.
