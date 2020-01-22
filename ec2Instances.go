@@ -8,10 +8,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
+// GetInstances returns Instances based on the given ids or all if no ids are given.
 func (cl *Client) GetInstances(ids ...string) []Instance {
 	return cl.GetInstanceMap().GetInstances(ids...)
 }
 
+// GetInstances returns Instances based on the given ids or all if no ids are given.
 func (i InstanceMap) GetInstances(ids ...string) []Instance {
 	var instances []Instance
 	switch {

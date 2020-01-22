@@ -11,6 +11,7 @@ import (
 // InstanceMap hold a mapping of ec2 instances by instance id.
 type InstanceMap map[string]*ec2.Instance
 
+// ListIDs returns a list of IDs for the InstanceMap.
 func (i InstanceMap) ListIDs() []string {
 	var ids []string
 	for k := range i {
@@ -19,6 +20,7 @@ func (i InstanceMap) ListIDs() []string {
 	return ids
 }
 
+// ListSG returns a list of SecurityGroups found for the InstanceMap.
 func (i InstanceMap) ListSG() []string {
 	var ids []string
 	for k := range i {
@@ -29,7 +31,7 @@ func (i InstanceMap) ListSG() []string {
 	return ids
 }
 
-// GetInstances returns an InstanceMap based on the entered id string. All instances returned if no id entered.
+// GetInstanceMap returns an InstanceMap based on the entered id string. All instances returned if no id entered.
 func (cl *Client) GetInstanceMap(ids ...string) InstanceMap {
 	var instanceMap InstanceMap
 	var input *ec2.DescribeInstancesInput

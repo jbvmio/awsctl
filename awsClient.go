@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
@@ -16,11 +17,6 @@ type Client struct {
 	dryrunMode bool
 	svc        *SVC
 	awsContext *AWSContext
-}
-
-// SVC contains available AWS service clients
-type SVC struct {
-	ec2Svc *ec2.EC2
 }
 
 // NewClient creates a new Client
@@ -60,13 +56,20 @@ func (cl *Client) DryRunMode(enabled bool) {
 	cl.dryrunMode = enabled
 }
 
-func (cl *Client) InitEC2() {
-	cl.svc.ec2Svc = ec2.New(cl.session)
-}
-
+// EC2 returns the EC2 instance of the Client.
 func (cl *Client) EC2() *ec2.EC2 {
 	if cl.svc.ec2Svc == nil {
-		cl.InitEC2()
+		cl.InitSVC(SvcTypeEC2)
 	}
 	return cl.svc.ec2Svc
+}
+
+// InitSVC inits the corresponding Service for the Client.
+func (cl *Client) InitSVC(service ServiceType) {
+	switch service {
+	case SvcTypeEC2:
+		cl.svc.ec2Svc = ec2.New(cl.session)
+	case SvcTypeCloudWatch:
+		cl.svc.cwSvc = cloudwatch.New(cl.session)
+	}
 }

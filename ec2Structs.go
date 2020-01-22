@@ -12,9 +12,9 @@ type Instance struct {
 	Index          int64
 	KeyName        string
 	Name           string
-	PrivateDnsName string
+	PrivateDNSName string
 	PrivateIP      string
-	PublicDnsName  string
+	PublicDNSName  string
 	PublicIP       string
 	State          string
 	Type           string
@@ -47,9 +47,9 @@ func (i *Instance) convertFrom(awsI *ec2.Instance) {
 	i.Index = *awsI.AmiLaunchIndex
 	i.KeyName = *awsI.KeyName
 	i.Name = name
-	i.PrivateDnsName = *awsI.PrivateDnsName
+	i.PrivateDNSName = *awsI.PrivateDnsName
 	i.PrivateIP = *awsI.PrivateIpAddress
-	i.PublicDnsName = *awsI.PublicDnsName
+	i.PublicDNSName = *awsI.PublicDnsName
 	i.State = *awsI.State.Name
 	i.Type = *awsI.InstanceType
 	i.VPC = *awsI.VpcId

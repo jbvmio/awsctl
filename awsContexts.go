@@ -40,7 +40,7 @@ func CreateAWSContext(values map[string]string) *AWSContext {
 func (ctx *AWSContext) Retrieve() (credentials.Value, error) {
 	switch {
 	case ctx.AccessKeyID == "" || ctx.SecretAccessKey == "":
-		return credentials.Value{}, fmt.Errorf("Error: Empty Context.")
+		return credentials.Value{}, fmt.Errorf("empty context")
 	}
 	return credentials.Value{
 		AccessKeyID:     ctx.AccessKeyID,
@@ -50,6 +50,7 @@ func (ctx *AWSContext) Retrieve() (credentials.Value, error) {
 	}, nil
 }
 
+// IsExpired returns true if credentials are expired (TODO).
 func (ctx *AWSContext) IsExpired() bool {
 	return false
 }

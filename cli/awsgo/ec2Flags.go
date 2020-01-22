@@ -11,14 +11,17 @@ import (
 	"github.com/jbvmio/awsctl/cli/x/ops"
 )
 
+// EC2Flags contains flag options for EC2.
 type EC2Flags struct {
 	Region string `yaml:"Region"`
 }
 
+// ConfigRegion returns the region.
 func (flags EC2Flags) ConfigRegion() *string {
 	return &flags.Region
 }
 
+// GetDefaults returns default configurations defined with overrides provided by flags.
 func (flags EC2Flags) GetDefaults(defaultDir string, overrides awsctl.ConfigOptions) awsctl.ConfigOptions {
 	var defaultFlags EC2Flags
 	if ops.FileExists(defaultDir) {
