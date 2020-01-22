@@ -20,6 +20,7 @@ import (
 
 	"github.com/jbvmio/awsctl/cli/awsgo"
 	"github.com/jbvmio/awsctl/cli/cmd/config"
+	"github.com/jbvmio/awsctl/cli/cmd/cw"
 	"github.com/jbvmio/awsctl/cli/cmd/ec2"
 	"github.com/jbvmio/awsctl/cli/cmd/get"
 	"github.com/jbvmio/awsctl/cli/x/out"
@@ -69,6 +70,7 @@ func init() {
 	rootCmd.AddCommand(config.CmdConfig)
 	rootCmd.AddCommand(get.CmdGet)
 	rootCmd.AddCommand(ec2.CmdRestartEc2)
+	rootCmd.AddCommand(cw.CmdCW)
 }
 
 func initConfig() {

@@ -64,6 +64,14 @@ func (cl *Client) EC2() *ec2.EC2 {
 	return cl.svc.ec2Svc
 }
 
+// CW returns the CloudWatch instance of the Client.
+func (cl *Client) CW() *cloudwatch.CloudWatch {
+	if cl.svc.ec2Svc == nil {
+		cl.InitSVC(SvcTypeCloudWatch)
+	}
+	return cl.svc.cwSvc
+}
+
 // InitSVC inits the corresponding Service for the Client.
 func (cl *Client) InitSVC(service ServiceType) {
 	switch service {

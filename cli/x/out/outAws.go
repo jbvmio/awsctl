@@ -36,7 +36,7 @@ func printAws(i interface{}) {
 	case []awsctl.Instance:
 		tbl = table.New("INDEX", "ID", "STATE", "IP", "HOSTNAME")
 		for _, v := range i {
-			tbl.AddRow(v.Index, v.ID, v.State, v.PublicIP, v.PublicDnsName)
+			tbl.AddRow(v.Index, v.ID, v.State, v.PublicIP, v.PublicDNSName)
 		}
 	case []awsctl.InstanceStateChange:
 		tbl = table.New("ID", "PREVIOUS", "CURRENT")
@@ -57,7 +57,7 @@ func printAwsWide(i interface{}) {
 	case []awsctl.Instance:
 		tbl = table.New("INDEX", "NAME", "ID", "TYPE", "AZ", "VPC", "STATE", "IP", "HOSTNAME", "KEY", "TAGS")
 		for _, v := range i {
-			tbl.AddRow(v.Index, v.Name, v.ID, v.Type, v.AZ, v.VPC, v.State, v.PublicIP, v.PublicDnsName, v.KeyName, v.TagCount)
+			tbl.AddRow(v.Index, v.Name, v.ID, v.Type, v.AZ, v.VPC, v.State, v.PublicIP, v.PublicDNSName, v.KeyName, v.TagCount)
 		}
 	}
 	tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt)
