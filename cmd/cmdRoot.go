@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	cfgFile string
+	cfgFile          string
+	defaultConfigDir string
 )
 
 var globalFlags GlobalFlags
@@ -47,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(cmdRestartEc2)
 	rootCmd.AddCommand(cmdECR)
 	rootCmd.AddCommand(cmdECS)
+	rootCmd.AddCommand(cmdKinesis)
 }
 
 func initConfig() {
@@ -58,8 +60,10 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		defaultConfigDir = home + `/.aws/awsctl/configs/default`
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".awsctl")
+		//viper.SetConfigName(".awsctl")
+		viper.SetConfigName(".aws/.condorctl")
 	}
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {

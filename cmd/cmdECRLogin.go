@@ -9,6 +9,7 @@ var cmdECRLogin = &cobra.Command{
 	Short: "Docker Login to ECR Registry",
 	Run: func(cmd *cobra.Command, args []string) {
 		LoginECR(awsFlags)
+		//LoginAWSECR(awsFlags)
 	},
 }
 

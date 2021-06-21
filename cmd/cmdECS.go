@@ -11,9 +11,9 @@ var cmdECS = &cobra.Command{
 	Short:   "ECS/Fargate Operations",
 	Run: func(cmd *cobra.Command, args []string) {
 		//Infof("%+v\n", ListECSClusters(awsFlags))
-		PrintAWS(DescribeClusters(awsFlags, ecsFlags), outFlags.Format)
+		//PrintAWS(DescribeClusters(awsFlags, ecsFlags), outFlags.Format)
 		//DescribeECSServices(awsFlags, )
-		//PrintAWS(ListECSServices(awsFlags, ecsFlags))
+		PrintAWS(ListECSServices(awsFlags, ecsFlags))
 		//DescribeECSServices(awsFlags, ecsFlags)
 	},
 }

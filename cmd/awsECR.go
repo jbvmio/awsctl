@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/docker/cli/cli/config"
 	"github.com/docker/cli/cli/config/credentials"
@@ -13,6 +14,53 @@ import (
 	dclient "github.com/docker/docker/client"
 	"github.com/jbvmio/awsgo"
 )
+
+// LoginAWSECR - Currently not being used?
+func LoginAWSECR(aFlags AWSFlags) {
+	client.AddConfig(awsgo.SvcTypeECR, aFlags)
+	input := ecr.GetAuthorizationTokenInput{
+		RegistryIds: []*string{
+			aws.String(`0007778889997`),
+		},
+	}
+	token, err := client.ECR().GetAuthorizationToken(&input)
+	if err != nil {
+		Failf("error generating token: %v", err)
+	}
+	if len(token.AuthorizationData) < 1 {
+		Exitf(0, "no data found")
+	}
+	u, p := parseTokenAuthData(*token.AuthorizationData[0].AuthorizationToken)
+	c, err := dclient.NewEnvClient()
+	if err != nil {
+		Failf("is the Docker Daemon running? Error: %s\n", err.Error())
+	}
+	authConf := types.AuthConfig{
+		Username:      u,
+		Password:      p,
+		ServerAddress: *token.AuthorizationData[0].ProxyEndpoint,
+	}
+	resp, err := c.RegistryLogin(context.Background(), authConf)
+	if err != nil {
+		Failf("error logging into registry: %v\n", err)
+	}
+	dir := config.Dir()
+	conf, err := config.Load(dir)
+	if err != nil {
+		Failf("error obtaining config dir: %v\n", err)
+	}
+	cAuthConf := ctypes.AuthConfig{
+		Username:      u,
+		Password:      p,
+		ServerAddress: *token.AuthorizationData[0].ProxyEndpoint,
+	}
+	store := credentials.NewNativeStore(conf, `desktop`)
+	err = store.Store(cAuthConf)
+	if err != nil {
+		Failf("error saving auth config: %v\n", err)
+	}
+	Infof("%s", resp.Status)
+}
 
 // GenECRToken generates an Auth token for pushing to ECR.
 func GenECRToken(aFlags AWSFlags) *ecr.GetAuthorizationTokenOutput {
@@ -99,6 +147,7 @@ func ListRepos(aFlags AWSFlags) *ecr.DescribeRepositoriesOutput {
 	if err != nil {
 		Failf("error listing repositories: %v", err)
 	}
+	Infof("%+v\n", output)
 	return output
 }
 

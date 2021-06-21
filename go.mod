@@ -16,7 +16,8 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fatih/color v1.9.0
 	github.com/gorilla/mux v1.7.3 // indirect
-	github.com/jbvmio/awsgo v0.0.0-20200127213039-0276fe4e20a9
+	github.com/harlow/kinesis-consumer v0.3.3
+	github.com/jbvmio/awsgo v0.0.0-20200212181150-d64fa614427b
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/image-spec v1.0.1 // indirect

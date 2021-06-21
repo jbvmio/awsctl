@@ -1,22 +1,38 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/jbvmio/awsgo"
 	"github.com/spf13/viper"
 )
 
 // Config holds all values for a given context.
 type Config struct {
-	Contexts       map[string]map[string]string `yaml:"contexts"`
-	CurrentContext string                       `yaml:"current-context"`
+	Contexts       map[string]map[string]string `yaml:"profiles"`
+	CurrentContext string                       `yaml:"current-profile"`
 	ConfigVersion  int                          `yaml:"config-version"`
 }
 
 // GetConfig .
 func GetConfig() *Config {
 	var config Config
-	viper.Unmarshal(&config)
-	config.CurrentContext = viper.GetString("current-context")
+	config.Contexts = make(map[string]map[string]string)
+	//viper.Unmarshal(&config)
+	profiles := viper.GetStringMap(`profiles`)
+	for profile, values := range profiles {
+		config.Contexts[profile] = make(map[string]string)
+		config.Contexts[profile][`name`] = profile
+		config.Contexts[profile][`default_config_dir`] = defaultConfigDir
+		if vals, ok := values.(map[string]interface{}); ok {
+			for k, val := range vals {
+				if v, good := val.(string); good {
+					config.Contexts[profile][k] = v
+				}
+			}
+		}
+	}
+	config.CurrentContext = viper.GetString("current-profile")
 	config.ConfigVersion = viper.GetInt("config-version")
 	return &config
 }
@@ -54,11 +70,12 @@ func GetContext(context ...string) *awsgo.AWSContext {
 }
 
 func getCurrentCtx() *awsgo.AWSContext {
-	current := viper.GetString("current-context")
+	current := viper.GetString("current-profile")
+	current = strings.ToLower(current)
 	config := GetConfig()
 	ctx := config.Contexts[current]
 	if ctx["name"] == "" {
-		Failf("Error: invalid config or context")
+		Failf("Error: invalid config or profile")
 	}
 	return awsgo.CreateAWSContext(ctx)
 }
