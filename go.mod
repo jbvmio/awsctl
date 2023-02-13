@@ -13,7 +13,6 @@ require (
 	github.com/docker/docker v1.13.1
 	github.com/docker/docker-credential-helpers v0.6.3 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
-	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fatih/color v1.9.0
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/harlow/kinesis-consumer v0.3.3
@@ -21,7 +20,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/image-spec v1.0.1 // indirect
-	github.com/opencontainers/runc v0.1.1 // indirect
+	github.com/opencontainers/runc v1.1.2 // indirect
 	github.com/rodaine/table v1.0.0
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v0.0.5
