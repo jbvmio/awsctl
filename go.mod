@@ -20,7 +20,7 @@ require (
 	github.com/jbvmio/awsgo v0.0.0-20200212181150-d64fa614427b
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/opencontainers/image-spec v1.0.1 // indirect
+	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/opencontainers/runc v0.1.1 // indirect
 	github.com/rodaine/table v1.0.0
 	github.com/spf13/cast v1.3.0
